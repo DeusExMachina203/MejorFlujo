@@ -4,8 +4,9 @@ import geopandas as gpd
 import folium
 import matplotlib.pyplot as plt
 import shapely as spl
+import random as rd
 
-dfNodos=pd.read_csv('Data/NodosFinal.csv')
+dfNodos=pd.read_csv('Dataset/NodosFinal.csv')
 dfNodos['geometry'] = dfNodos['geometry'].apply(spl.wkt.loads)
 gdfNodos = gpd.GeoDataFrame(dfNodos,geometry='geometry',crs="WGS84")
 gdfNodos.info()

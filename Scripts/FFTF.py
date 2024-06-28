@@ -109,13 +109,13 @@ Lineas2 = 'Dataset/Lineas2.csv'
 Lineas3 = 'Dataset/Lineas3.csv'
 Nodos= 'Dataset/NodosFinal.csv'
 
-gdfLineas4=leerArchivos(Lineas4)
+gdfLineas2=leerArchivos(Lineas2)
 gdfNodos=leerArchivos(Nodos)
 
-gdfLineas4.head()
-gdfNodos.head()
+#gdfLineas4.head()
+#gdfNodos.head()
 
-matrizPeso=matrix(gdfNodos,gdfLineas4)
+matrizPeso=matrix(gdfNodos,gdfLineas2)
 MatrizUsable=matrizPeso
 
 g = Graph(MatrizUsable)
