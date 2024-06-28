@@ -6,15 +6,8 @@ import Card from '../components/Card.astro';
 ---
 <Layout title="Welcome to Astro.">
 	<main>
-		<h1>Licitacion: Reestructuracion electrica en el Peru </span></h1>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href = ""
-				title="Subir archivo"
-				body="Sube el archivo .csv"
-			/>
-		</ul>
-        <form action="http://127.0.0.1:8000/upload/upload-file/" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate="">
+		<h1>Sube el archivo .csv</span></h1>
+			<form action="http://127.0.0.1:8000/upload/upload-file/" method="POST" enctype="multipart/form-data" class="form-horizontal" id = "form" >
             <fieldset>
               <input type="hidden" name="csrfmiddlewaretoken" value="ENObUuRTNsOvGppXzW5OETNjEqO5IMVuhBYJZENIHfu6zE5k2cVi1UvFogboOAbQ">
               
@@ -103,12 +96,5 @@ import Card from '../components/Card.astro';
 </style>
 
 <script>
-    const form = document.getElementById("form")
-    form?.addEventListener(form, (event) =>{
-        event.preventDefault();
-        fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form)
-        })
-    })
+
 </script>

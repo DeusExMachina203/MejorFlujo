@@ -1,4 +1,8 @@
 from django.shortcuts import render
+from rest_framework.decorators import api_view
 
+@api_view()
 def map(request):
-    return render(request, '../media/map.html')
+    print(request.query_params['name'])
+    name = request.query_params['name']
+    return render(request, f'../media/' + name +'.html')

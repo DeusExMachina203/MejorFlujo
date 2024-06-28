@@ -1,7 +1,6 @@
 import pandas as pd
 import geopandas as gpd
 import folium
-import matplotlib.pyplot as plt
 import shapely as spl
 import collections as cl
 import numpy as np
@@ -76,11 +75,25 @@ class Graph:
                 self.graph[v][u] += path_flow
                 v = parent[v]
  
-        return max_flow
+        NodosNV=[]
+        
+        flujos=[0 for x in range(1103)]
+        for i in range(1103):
+            potrequerida=gdfNodos.iloc[i]["POTENCIA_I"]
+            tag=gdfNodos.iloc[i]["TAG"]
+            #print(potrequerida,tag)
+            for j in range(1103):
+                flujos[i]+=self.graph[j][i]
+            if flujos[i]<potrequerida and tag != "CH":
+                print("Subestacion",i,"No cumple con la demanda de potencia")
+                NodosNV.append(i)
+        if len(NodosNV)==0:
+            print("Todas las estaciones se encuentran operando dentro de los parametros")
+        return flujos,max_flow,NodosNV
 
 def leerArchivos(archivo):
     dfArchivo=pd.read_csv(archivo)
-    dfArchivo.info()
+    #dfArchivo.info()
     #dfArchivo=dfArchivo.loc
     lineas = dfArchivo['geometry'].apply(spl.wkt.loads)
     gdfArchivo = gpd.GeoDataFrame(dfArchivo, geometry =lineas,crs="WGS84")
@@ -104,22 +117,31 @@ def matrix(nodos,lineas):
         matrix[0][pos1][pos2]=potenciamax
     return matrix[0]
        
-Lineas4 = 'Dataset/Lineas4.csv'
-Lineas2 = 'Dataset/Lineas2.csv'
-Lineas3 = 'Dataset/Lineas3.csv'
-Nodos= 'Dataset/NodosFinal.csv'
+Lineas4 = '../Dataset/Lineas4.csv'
+Lineas = '../Dataset/Lineas.csv'
+Lineas2 = '../Dataset/Lineas2.csv'
+Lineas3 = '../Dataset/Lineas3.csv'
+Nodos= '../Dataset/NodosFinal.csv'
 
-gdfLineas4=leerArchivos(Lineas4)
+gdfLineas=leerArchivos(Lineas)
 gdfNodos=leerArchivos(Nodos)
 
-gdfLineas4.head()
-gdfNodos.head()
+#gdfLineas4.head()
+#gdfNodos.head()
 
-matrizPeso=matrix(gdfNodos,gdfLineas4)
+matrizPeso=matrix(gdfNodos,gdfLineas)
 MatrizUsable=matrizPeso
 
 g = Graph(MatrizUsable)
  
 source = 1097; sink = 1100
-  
-print ("The maximum possible flow is %d " % g.FordFulkerson(source, sink))
+flujos,flmax,NodosNV = g.FordFulkerson(source, sink)
+
+#("OBJECTID","TAG","TENSION_NO","POTENCIA_I","POTENCIA_E","x","y","geometry")]
+gdfNodosNV=gpd.GeoDataFrame(gdfNodos.iloc[NodosNV],crs="WGS84",)
+gdfNodosNV.to_csv('../Dataset/NodosNoViabilizados.csv')
+
+gdfFlujos=gpd.GeoDataFrame(gdfNodos,crs="WGS84")
+gdfFlujos['Ingreso']=flujos
+gdfFlujos.head()
+#.to_csv('../Dataset/Flujos.csv')
