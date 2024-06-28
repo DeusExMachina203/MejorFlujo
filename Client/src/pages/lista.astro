@@ -1,31 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import File from '../components/File.astro';
 
 
 ---
 <Layout title="Welcome to Astro.">
 	<main>
-		<h1>Sube el archivo .csv</span></h1>
-			<form action="http://127.0.0.1:8000/upload/upload-file/" method="POST" enctype="multipart/form-data" class="form-horizontal" id = "form" >
-            <fieldset>
-              <input type="hidden" name="csrfmiddlewaretoken" value="ENObUuRTNsOvGppXzW5OETNjEqO5IMVuhBYJZENIHfu6zE5k2cVi1UvFogboOAbQ">
-              
-              
-
-        <div class="form-group has-error">
-
-            <label class="col-sm-2 control-label ">
-                File
-            </label>
-
-            <div class="col-sm-10">
-                <input name="file" type="file" value="">
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-primary js-tooltip" title="" data-original-title="Make a POST request on the File Upload Api resource">Subir</button>
-              </div>
-        </div>
+        <h1>Licitacion: Reestructuracion electrica en el Peru </span></h1>
+		<img class = "escudo" src="http://2.bp.blogspot.com/-lXSlgz1HlkY/VLk3yfORA3I/AAAAAAAAMf8/BITkV6kS9YE/s1600/Escudo_del_Peru.png">
+	<div id = "card-container">	
+            
+    </div>
 
 	</main>
 </Layout>
@@ -93,8 +78,25 @@ import Card from '../components/Card.astro';
 		gap: 2rem;
 		padding: 0;
 	}
+    .file{
+        border: 1px solid white;
+    }
 </style>
 
 <script>
+    const files = await fetch('http://127.0.0.1:8000/upload/filelist/');
+    const data = await files.json();
+    const list = data.files;
+    console.log(list);
+
+    const container = document.getElementById('card-container')
+
+    list.map((file : any) => {
+        console.log('e')
+        const newFile = document.createElement('div');
+        newFile.classList.add('file');
+        newFile.innerHTML = "<h4>" + "<a href = \"" + "http://127.0.0.1:8000/html?name=" + file.split(".")[0] + " \"> "+file + "</a><h4>";
+        container?.appendChild(newFile);
+    });
 
 </script>

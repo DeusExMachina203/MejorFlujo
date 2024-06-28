@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+import os
 
 from .serializers import FileUploadSerializer
 
@@ -11,16 +13,19 @@ class FileUploadAPIView(APIView):
     
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            # you can access the file like this from serializer
-            # uploaded_file = serializer.validated_data["file"]
-            serializer.save()
-            return Response(
-                serializer.data,
-                status=status.HTTP_201_CREATED
-            )
-        
+        serializer.is_valid()
+        serializer.save()
         return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+
+@api_view()
+def filelist(request):
+    path = "./media"
+    dir_list = os.listdir(path)
+    print(dir_list)
+    files = {"files" : dir_list}
+    return Response(
+        files
         )
